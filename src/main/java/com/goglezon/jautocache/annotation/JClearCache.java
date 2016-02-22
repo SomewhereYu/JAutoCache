@@ -1,4 +1,4 @@
-package com.goglezon.autocache.annotation;
+package com.goglezon.jautocache.annotation;
 
 import java.lang.annotation.*;
 

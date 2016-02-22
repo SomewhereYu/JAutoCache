@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- 控制台日志 -->
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%5p] %C{1}:%L - %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="${pop-ware.log.level}"/>
+        </filter>
+    </appender>
+
+    <!-- ERROR级别日志 -->
+    <appender name="LOGGER-ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <!-- 日志输出缓冲 -->
+        <param name="BufferedIO" value="${pop-ware.log.buffer}"/>
+
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="file" value="pop-logger-error.log"/>
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="${pop-ware.log.ConversionPattern}"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="ERROR"/>
+            <param name="LevelMax" value="ERROR"/>
+        </filter>
+    </appender>
+
+    <!-- WARN级别日志 -->
+    <appender name="LOGGER-WARN" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <!-- 日志输出缓冲 -->
+        <param name="BufferedIO" value="${pop-ware.log.buffer}"/>
+
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="file" value="pop-logger-warn.log"/>
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="${pop-ware.log.ConversionPattern}"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="WARN"/>
+            <param name="LevelMax" value="WARN"/>
+        </filter>
+    </appender>
+
+    <!-- debug日志 -->
+    <appender name="LOGGER-DEBUG" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <!-- 日志输出缓冲 -->
+        <param name="BufferedIO" value="${pop-ware.log.buffer}"/>
+
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="file" value="pop-ware-debug.log"/>
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="${pop-ware.log.ConversionPattern}"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="DEBUG"/>
+            <param name="LevelMax" value="DEBUG"/>
+        </filter>
+    </appender>
+
+    <!-- info日志 -->
+    <appender name="LOGGER-INFO" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <!-- 日志输出缓冲 -->
+        <param name="BufferedIO" value="${pop-ware.log.buffer}"/>
+
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="file" value="pop-ware-info.log"/>
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="${pop-ware.log.ConversionPattern}"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="INFO"/>
+            <param name="LevelMax" value="INFO"/>
+        </filter>
+    </appender>
+
+    <!-- SQL日志 -->
+    <appender name="LOGGER-SQL" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <!-- 日志输出缓冲 -->
+        <param name="BufferedIO" value="${pop-ware.log.buffer}"/>
+
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="file" value="pop-ware-sql.log"/>
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="${pop-ware.log.ConversionPattern}"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="${pop-ware.log.level}"/>
+        </filter>
+    </appender>
+
+    <root>
+        <priority value="WARN"/>
+        <appender-ref ref="CONSOLE"/>
+        <!-- appender-ref ref="LOGGER-DEBUG"/>
+        <appender-ref ref="LOGGER-INFO"/>
+        <appender-ref ref="LOGGER-WARN"/>
+        <appender-ref ref="LOGGER-ERROR"/ -->
+    </root>
+</log4j:configuration>
