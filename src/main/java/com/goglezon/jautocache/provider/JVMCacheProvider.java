@@ -38,7 +38,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
             return null;
         } else if (jvmCacheObject.expired()) {
             return null;
-        } else if (jvmCacheObject.getServiceUnavailableTimes() >= this.keepAliveTimesOnException) {
+        } else if (jvmCacheObject.getServiceUnavailableTimes() > this.keepAliveTimesOnException) {
             return null;
         }
 
@@ -74,11 +74,11 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
      */
     public Object onException(String key,int keepAlive, Exception e) throws Exception {
         JVMCacheObject jvmCacheObject = cacheMap.get(key);
-
         //缓存里没有该对象时，且真实接口抛异常时，将异常继续抛出
-        if (jvmCacheObject == null) {
+        if (jvmCacheObject == null || jvmCacheObject.getServiceUnavailableTimes() >= this.keepAliveTimesOnException) {
             throw e;
         }
+
         jvmCacheObject.onException(keepAlive);
         return get(key);
     }

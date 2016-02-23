@@ -1,4 +1,4 @@
-package com.goglezon.jautocache;
+package com.goglezon.jautocache.manage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

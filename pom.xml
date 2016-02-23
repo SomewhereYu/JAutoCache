@@ -7,12 +7,12 @@
     <groupId>com.jd.pop.jautocache</groupId>
     <artifactId>jautocache</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.encoding>utf-8</maven.compiler.encoding>
-        <spring.version>3.1.4.RELEASE</spring.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
         <jd.jsf.version>1.5.2</jd.jsf.version>
     </properties>
 
@@ -145,16 +145,4 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>jd-central</id>
-            <name>libs-releases</name>
-            <url>http://artifactory.360buy-develop.com/libs-releases-local</url>
-        </repository>
-        <snapshotRepository>
-            <id>jd-snapshots</id>
-            <name>libs-snapshots</name>
-            <url>http://artifactory.360buy-develop.com/libs-snapshots-local</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

@@ -7,9 +7,6 @@ import com.goglezon.jautocache.annotation.JUseCache;
 import com.goglezon.jautocache.exception.NullCacheException;
 import com.goglezon.jautocache.model.AutoCacheBaseModel;
 import com.goglezon.jautocache.provider.AutoCacheProvider;
-import com.goglezon.jautocache.trace.Trace;
-import com.goglezon.jautocache.trace.TraceBuilder;
-import com.goglezon.jautocache.trace.TraceInfo;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
@@ -25,7 +22,6 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
     static Logger logger = LoggerFactory.getLogger(AutoCacheAdvisor.class);
 
     private AutoCacheProvider autoCacheProvider;
-    private Trace trace;
 
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         Object result = null;
@@ -69,9 +65,6 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
         }
         String classSimpleName = methodInvocation.getThis().getClass().getSimpleName();
         String methodName = methodInvocation.getMethod().getName();
-        //增加监控
-        final TraceInfo info = new TraceInfo(classSimpleName, methodName);
-        trace.begin(info);
         //组合成缓存里的完整的Key
         if (!jAutoCache.keyPrefix().equals("")) {
             cacheKey = jAutoCache.keyPrefix() + "_" + methodName + "(" + unitedArgsKey + ")";
@@ -96,7 +89,6 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
             }
 
             if(result!=null) {
-                trace.end(info);
                 return result;
             }
         }
@@ -109,8 +101,6 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
 
         }
         //////////////////////////////////
-        info.error();
-        trace.end(info);
         //set Cache
         if (hasUseAnnotation) {
             try {
@@ -188,10 +178,6 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
     }
 
     public void afterPropertiesSet() throws Exception {
-        //加载监控插件
-        TraceBuilder traceBuilder = new TraceBuilder();
-        traceBuilder.start();
-        this.trace = traceBuilder;
     }
 
     public AutoCacheProvider getAutoCacheProvider() {

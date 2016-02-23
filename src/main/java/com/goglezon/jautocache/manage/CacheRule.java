@@ -1,4 +1,4 @@
-package com.goglezon.jautocache;
+package com.goglezon.jautocache.manage;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

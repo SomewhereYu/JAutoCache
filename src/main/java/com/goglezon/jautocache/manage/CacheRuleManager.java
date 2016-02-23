@@ -1,4 +1,4 @@
-package com.goglezon.jautocache;
+package com.goglezon.jautocache.manage;
 
 import com.goglezon.jautocache.annotation.JAutoCache;
 import com.goglezon.jautocache.annotation.JUseCache;

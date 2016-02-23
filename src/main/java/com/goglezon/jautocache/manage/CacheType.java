@@ -1,4 +1,4 @@
-package com.goglezon.jautocache;
+package com.goglezon.jautocache.manage;
 
 /**
  * Created by yuwenqi@jd.com on 2015/11/30 11:01.
