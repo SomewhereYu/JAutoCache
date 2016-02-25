@@ -16,7 +16,7 @@
     </bean>
 
     <aop:config>
-        <aop:pointcut id="demoAutoCachePointCut" expression="execution(* some.package.dao.impl.*.*(..))"/>
+        <aop:pointcut id="demoAutoCachePointCut" expression="execution(* some.package.dao.*.*(..))"/>
         <aop:advisor id="demoAutoJVMCache" advice-ref="demoJvmCacheAdvisor" pointcut-ref="demoAutoCachePointCut" />
     </aop:config>
     <!-- END AUTOCACHE-->
