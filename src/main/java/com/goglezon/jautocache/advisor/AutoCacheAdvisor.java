@@ -5,7 +5,7 @@ import com.goglezon.jautocache.annotation.JClearCache;
 import com.goglezon.jautocache.annotation.JUpdateCache;
 import com.goglezon.jautocache.annotation.JUseCache;
 import com.goglezon.jautocache.exception.NullCacheException;
-import com.goglezon.jautocache.model.AutoCacheBaseModel;
+import com.goglezon.jautocache.model.AutoCacheModel;
 import com.goglezon.jautocache.provider.AutoCacheProvider;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -113,8 +113,8 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
         //update Cache
         if (hasUpdateAnnotation) {
             //如果返回值不是AutoCacheBaseModel的子类实例
-            if (!(result instanceof AutoCacheBaseModel)) {
-                throw new Exception("You must return an instance of AutoCacheBaseModel when you use \"@JUpdateCache\"");
+            if (!(result instanceof AutoCacheModel)) {
+                throw new Exception("You must return an instance of AutoCacheModel when you use \"@JUpdateCache\"");
             }
 
             try {
@@ -169,10 +169,10 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
             for (Object item : array) {
                 keySegment += getParameterKeySeg(item);
             }
-        } else if (param instanceof AutoCacheBaseModel) {
-            keySegment += ((AutoCacheBaseModel) param).getUniqueKey();
+        } else if (param instanceof AutoCacheModel) {
+            keySegment += ((AutoCacheModel) param).keyGen();
         } else {
-            throw new RuntimeException("The argument must be an instance of AutoCacheBaseModel");
+            throw new RuntimeException("The argument must be an instance of AutoCacheModel");
         }
         return keySegment;
     }
