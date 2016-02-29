@@ -8,13 +8,13 @@ import java.io.Serializable;
 /**
  * Created by yuwenqi@jd.com on 2015/11/19 10:56.
  */
-public class JVMCacheObject implements Serializable{
+public class JVMCacheObject<T> implements Serializable{
     Logger logger= LoggerFactory.getLogger(JVMCacheObject.class);
 
     private String key;
     //过期时间，非存活时间
     private long expiredTime=0;
-    private Object data;
+    private T data;
     private int serviceUnavailableTimes=0;
 
     public JVMCacheObject(String key){
@@ -25,7 +25,7 @@ public class JVMCacheObject implements Serializable{
         return data;
     }
 
-    public void setData(Object value) {
+    public void setData(T value) {
         this.data = value;
     }
 
