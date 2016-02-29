@@ -91,8 +91,9 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
     }
 
     public void afterPropertiesSet() throws Exception {
-
-        cacheMap = new LRULinkedHashMap<String, JVMCacheObject>(getMaxCapacity());
+        int maxCap=getMaxCapacity();
+        //maxCap=maxCap>>4;
+        cacheMap = new LRULinkedHashMap<String, JVMCacheObject>(maxCap);
         //getLocalCache();
     }
 
