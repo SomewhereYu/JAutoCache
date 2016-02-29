@@ -4,6 +4,7 @@ import com.goglezon.jautocache.annotation.JAutoCache;
 import com.goglezon.jautocache.annotation.JClearCache;
 import com.goglezon.jautocache.annotation.JUpdateCache;
 import com.goglezon.jautocache.annotation.JUseCache;
+import com.goglezon.jautocache.common.ArgumentParser;
 import com.goglezon.jautocache.exception.NullCacheException;
 import com.goglezon.jautocache.model.AutoCacheModel;
 import com.goglezon.jautocache.provider.AutoCacheProvider;
@@ -58,12 +59,11 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
         String unitedArgsKey;
         try {
             //不符合组合Key的规则，即方法的参数不符合组件规则时，不使用缓存。
-            unitedArgsKey = getArgsUnitedKey(args);
+            unitedArgsKey = new ArgumentParser(args).parse();
         } catch (Exception e) {
             logger.error("The argument type are not permitted. Cache disabled.\n" + e.getMessage());
             return methodInvocation.proceed();
         }
-        String classSimpleName = methodInvocation.getThis().getClass().getSimpleName();
         String methodName = methodInvocation.getMethod().getName();
         //组合成缓存里的完整的Key
         if (!jAutoCache.keyPrefix().equals("")) {
@@ -134,47 +134,6 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
             }
         }
         return result;
-    }
-
-    /**
-     * 获得被拦截到的方法的所有参数组合成的KEY
-     *
-     * @param args
-     * @return
-     */
-    private String getArgsUnitedKey(Object[] args) {
-        String key = "";
-        if (args.length == 0) return "";
-        for (Object arg : args) {
-            key = key + "_" + getParameterKeySeg(arg);
-        }
-        key = StringUtils.trimTrailingCharacter(key, '_');
-        return StringUtils.trimLeadingCharacter(key, '_');
-    }
-
-    /**
-     * 获得单个参数的Segment，其为整个缓存Key的一部分
-     *
-     * @param param
-     * @return
-     */
-    private String getParameterKeySeg(Object param) {
-
-        String keySegment = "";
-        logger.info("[Parameter Type]:" + param.getClass().toString());
-        if (param.getClass().isPrimitive() || LegalArgTypes.legal(param.getClass())) {
-            keySegment += param;
-        } else if (param.getClass().isArray()) {//可变参数
-            Object[] array = (Object[]) param;
-            for (Object item : array) {
-                keySegment += getParameterKeySeg(item);
-            }
-        } else if (param instanceof AutoCacheModel) {
-            keySegment += ((AutoCacheModel) param).keyGen();
-        } else {
-            throw new RuntimeException("The argument must be an instance of AutoCacheModel");
-        }
-        return keySegment;
     }
 
     public void afterPropertiesSet() throws Exception {
