@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by yuwenqi@jd.com on 2016/2/29 11:03.
@@ -36,8 +33,11 @@ public class ArgumentParser {
      * @return
      */
     private String getParameterKeySeg(Object param) {
-
         String keySegment = "";
+        if(param==null){
+            logger.info("[Parameter Type]: null");
+            return "null";
+        }
         logger.info("[Parameter Type]:" + param.getClass().toString());
         if (param.getClass().isPrimitive() || LegalArgTypes.legal(param.getClass())) {
             keySegment += param;
@@ -48,12 +48,10 @@ public class ArgumentParser {
             }
         } else if (param instanceof AutoCacheModel) {
             keySegment += ((AutoCacheModel) param).keyGen();
-        } else if(param instanceof Map){
-            return parseMap((Map)param);
-        } else if(param instanceof Set){
-            return parseSet((Set) param);
-        } else if(param instanceof List){
-            return parseList((List)param);
+        } else if(param instanceof Map) {
+            return parseMap((Map) param);
+        }else if(param instanceof List){
+            return parseList((List) param);
         }else {
             throw new RuntimeException("The argument must be an instance of AutoCacheModel");
         }
@@ -62,15 +60,11 @@ public class ArgumentParser {
 
     private String parseMap(Map map){
         Set<Map.Entry> entrySet=map.entrySet();
-        Set<Object> valueObject=new HashSet<Object>();
+        List valueObject=new ArrayList();
         for(Map.Entry entry:entrySet){
             valueObject.add(entry.getValue());
         }
         return getParameterKeySeg(valueObject.toArray());
-    }
-
-    private String parseSet(Set set){
-        return getParameterKeySeg(set.toArray());
     }
 
     private String parseList(List list){
