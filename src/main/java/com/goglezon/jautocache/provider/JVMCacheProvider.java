@@ -47,7 +47,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
             throw new NullCacheException("[JVMCacheProvider] -> Data in Cache is null. key:" + key);
         }
 
-        return BeanUtils.clone(jvmCacheObject.getData());
+        return jvmCacheObject.getData()==null?null:BeanUtils.clone(jvmCacheObject.getData());
     }
 
     /**
@@ -58,7 +58,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
     public void set(String key, Object obj, int keepAlive) {
         JVMCacheObject jvmCacheObject = new JVMCacheObject(key);
         jvmCacheObject.postpone(keepAlive);
-        jvmCacheObject.setData(BeanUtils.clone(obj));
+        jvmCacheObject.setData(obj==null?null:BeanUtils.clone(obj));
         cacheMap.put(key, jvmCacheObject);
         logger.info("[JVMCacheProvider.SET]-> keepAlive:" + keepAlive + " ,jvmCacheObject:" + jvmCacheObject.toString());
     }
