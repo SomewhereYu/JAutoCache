@@ -37,13 +37,13 @@ public class JVMCacheObject<T> implements Serializable{
         return false;
     }
     //延期
-    public void postpone(int keepAlive){
+    public void delay(int keepAlive){
         this.expiredTime =System.currentTimeMillis()/1000+keepAlive;
     }
 
     public void onException(int keeAlive){
         this.serviceUnavailableTimes++;
-        postpone(keeAlive);
+        delay(keeAlive);
     }
 
     public int getServiceUnavailableTimes() {

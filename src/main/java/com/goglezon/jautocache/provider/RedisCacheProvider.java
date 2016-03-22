@@ -15,7 +15,7 @@ public class RedisCacheProvider implements AutoCacheProvider {
     @Resource
 //    private ShardedXCommands jAutoCacheRedisClient;
 
-    public Object get(String key) {
+    public Object getRawObject(String key) {
 //        Object ret;
 //        byte[] bytes;
 //        bytes = jAutoCacheRedisClient.get(key.getBytes());
@@ -38,7 +38,7 @@ public class RedisCacheProvider implements AutoCacheProvider {
     }
 
 
-    public void set(String key, Object obj, int keepAlive) {
+    public void setRawObject(String key, Object obj, int keepAlive) {
 //        if (obj == null) return;
 //        RedisCacheObject redisCacheObject = new RedisCacheObject();
 //        redisCacheObject.setData(obj);
@@ -53,7 +53,7 @@ public class RedisCacheProvider implements AutoCacheProvider {
         logger.error("[SET]-> keepAlive:" + keepAlive + " ,object: " + obj.toString());
     }
 
-    public void clear(String key) {
+    public void clearRawObject(String key) {
 //        jAutoCacheRedisClient.del(key);
     }
 

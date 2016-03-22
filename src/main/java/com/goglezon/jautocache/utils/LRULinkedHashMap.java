@@ -1,4 +1,4 @@
-package com.goglezon.jautocache.provider;
+package com.goglezon.jautocache.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;

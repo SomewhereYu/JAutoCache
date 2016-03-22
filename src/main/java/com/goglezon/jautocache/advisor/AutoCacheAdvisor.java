@@ -2,11 +2,10 @@ package com.goglezon.jautocache.advisor;
 
 import com.goglezon.jautocache.annotation.JAutoCache;
 import com.goglezon.jautocache.annotation.JClearCache;
-import com.goglezon.jautocache.annotation.JUpdateCache;
 import com.goglezon.jautocache.annotation.JUseCache;
 import com.goglezon.jautocache.common.ArgumentParser;
 import com.goglezon.jautocache.exception.NullCacheException;
-import com.goglezon.jautocache.model.AutoCacheModel;
+import com.goglezon.jautocache.exception.OpCacheException;
 import com.goglezon.jautocache.provider.AutoCacheProvider;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -26,112 +25,98 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
 
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         Object result = null;
-        logger.info(methodInvocation.getMethod().getDeclaringClass().getName());
+        //注解相关校验
+        logger.debug(methodInvocation.getMethod().getDeclaringClass().getName());
         JAutoCache jAutoCache = methodInvocation.getMethod().getDeclaringClass().getAnnotation(JAutoCache.class);
         if (jAutoCache == null) {
             return methodInvocation.proceed();
         }
+
         JUseCache jUseCache = methodInvocation.getMethod().getAnnotation(JUseCache.class);
         JClearCache jClearCache = methodInvocation.getMethod().getAnnotation(JClearCache.class);
-        JUpdateCache jUpdateCache = methodInvocation.getMethod().getAnnotation(JUpdateCache.class);
 
-
-        boolean hasUpdateAnnotation = jUpdateCache != null && jUpdateCache.updateCache();
         boolean hasUseAnnotation = jUseCache != null && jUseCache.useCache();
         boolean hasClearAnnotation = jClearCache != null && jClearCache.clearCache();
 
-        int totalAnnotation = hasUpdateAnnotation ? 1 : 0;
-        totalAnnotation += hasUseAnnotation ? 1 : 0;
-        totalAnnotation += hasClearAnnotation ? 1 : 0;
-
-        //check annotations
-        if (totalAnnotation == 0) {
+        if (!(hasUseAnnotation || hasClearAnnotation)){
             return methodInvocation.proceed();
         }
 
-        if (totalAnnotation > 1) {
-            throw new Exception("The annotations [JUseCache,JUpdateCache,JClearCache] can't be used simultaneously!");
-        }
-
-        Object[] args = methodInvocation.getArguments();
-        String cacheKey;
-
+        //参数相关处理
         String unitedArgsKey;
         try {
-            //不符合组合Key的规则，即方法的参数不符合组件规则时，不使用缓存。
-            unitedArgsKey = new ArgumentParser(args).parse();
+            unitedArgsKey = new ArgumentParser(methodInvocation.getArguments()).parse();
         } catch (Exception e) {
             logger.error("The argument type are not permitted. Cache disabled.\n" + e.getMessage());
             return methodInvocation.proceed();
         }
         String methodName = methodInvocation.getMethod().getName();
-        //组合成缓存里的完整的Key
+        String cacheKey="." + methodName + "(" + unitedArgsKey + ")";
         if (!jAutoCache.keyPrefix().equals("")) {
-            cacheKey = jAutoCache.keyPrefix() + "_" + methodName + "(" + unitedArgsKey + ")";
+            cacheKey = jAutoCache.keyPrefix() + cacheKey;
         } else {
-            //用调用者的包名类名方法名及参数作为key
-            String className = methodInvocation.getMethod().getDeclaringClass().getName();
-            cacheKey = className + "." + methodName + "(" + unitedArgsKey + ")";
+            cacheKey = methodInvocation.getMethod().getDeclaringClass().getName() + cacheKey;
         }
-        int keepAlive=0;
+
+        //缓存存活时间
+        int keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
+
+        //处理缓存
         if (hasUseAnnotation) {
-            keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
-            try {
-                result = autoCacheProvider.get(cacheKey);
-                logger.info("[Get from cache]=>key:" + cacheKey);
-                logger.info("[Get from cache]=>value:" + result);
-            } catch (NullCacheException e) {
-                //缓存对象中的data值是null时，autoCacheProvider.get会抛出异常，此处捕获异常，返回null.
-                //比如查询一个记录，不存在，数据库没有抛异常，所以接口返回null是合理的。
-                //下一次查询该对象时，就直接返回null，而不用再次查询数据库。
-                logger.warn("AutoCacheProvider.get throws RuntimeException.\n" + e.getMessage());
-                return result;
-            }
-
-            if(result!=null) {
-                return result;
-            }
+            result=handleUseCacheAnnotation(methodInvocation,cacheKey, keepAlive);
+        } else if (hasClearAnnotation) {
+            result=handleClearCacheAnnotation(methodInvocation,cacheKey);
         }
+        return result;
+    }
+    /**
+     * 处理缓存注解
+     *
+     * @param cacheKey
+     * @param keepAlive
+     * @param methodInvocation
+     * @return
+     * @throws Throwable
+     */
+    private Object handleUseCacheAnnotation(MethodInvocation methodInvocation,String cacheKey, Integer keepAlive) throws Throwable {
+        Object result = null;
+        try {
+            result = autoCacheProvider.getRawObject(cacheKey);
+            logger.debug("[Get from cache]=>key:" + cacheKey);
+            logger.debug("[Get from cache]=>value:" + result);
+            if (result != null) {
+                return result;
+            }
+            result = methodInvocation.proceed();
+            autoCacheProvider.setRawObject(cacheKey, result, keepAlive);
+        } catch (NullCacheException nullCacheException) {
+            logger.warn("AutoCacheProvider.get throws NullCacheException.\n" + nullCacheException.getMessage());
+        } catch (OpCacheException opCacheException) {
+            logger.error("AutoCacheProvider.set throws OpCacheException.", opCacheException);
+        } catch (Exception e) {
+            logger.error("methodInvocation.proceed throws Exception.", e);
+            result = autoCacheProvider.onException(cacheKey, keepAlive, e);
+        }
+        return result;
+    }
 
+    /**
+     * 处理清楚缓存注解
+     *
+     * @param cacheKey
+     * @param methodInvocation
+     * @return
+     * @throws Throwable
+     */
+    private Object handleClearCacheAnnotation(MethodInvocation methodInvocation,String cacheKey) throws Throwable {
+        Object result = null;
         try {
             result = methodInvocation.proceed();
-        }catch (Exception e){
+            autoCacheProvider.clearRawObject(cacheKey);
+        } catch (OpCacheException opCacheException) {
+            logger.warn("AutoCacheProvider.clear throws RuntimeException.\n" + opCacheException.getMessage());
+        } catch (Exception e) {
             logger.error("methodInvocation.proceed throws Exception.", e);
-            return autoCacheProvider.onException(cacheKey,keepAlive,e);
-
-        }
-        //////////////////////////////////
-        //set Cache
-        if (hasUseAnnotation) {
-            try {
-                autoCacheProvider.set(cacheKey, result, keepAlive);
-            } catch (Exception e) {
-                logger.error("AutoCacheProvider.set throws RuntimeException.", e);
-            }
-        }
-
-        //update Cache
-        if (hasUpdateAnnotation) {
-            //如果返回值不是AutoCacheBaseModel的子类实例
-            if (!(result instanceof AutoCacheModel)) {
-                throw new Exception("You must return an instance of AutoCacheModel when you use \"@JUpdateCache\"");
-            }
-
-            try {
-                int keepAliveUpdate = jUpdateCache.keepAlive() > 0 ? jUpdateCache.keepAlive() : jAutoCache.keepAlive();
-                autoCacheProvider.set(cacheKey, result, keepAliveUpdate);
-            } catch (Exception e) {
-                logger.warn("AutoCacheProvider.set while using JUpdateCache throws RuntimeException.\n" + e.getMessage());
-            }
-        }
-
-        //clear Cache
-        if (hasClearAnnotation) {
-            try {
-                autoCacheProvider.clear(cacheKey);
-            } catch (Exception e) {
-                logger.warn("AutoCacheProvider.clear throws RuntimeException.\n" + e.getMessage());
-            }
         }
         return result;
     }
