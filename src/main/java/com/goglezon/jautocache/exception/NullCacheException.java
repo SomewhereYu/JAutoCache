@@ -1,8 +1,7 @@
 package com.goglezon.jautocache.exception;
 
 /**
- * 表示缓存存放为空
- * Created by xuxianjun on 2016/2/3.
+ * Created by yuwenqi@jd.com on 2016/3/18.
  */
 public class NullCacheException extends Exception {
 

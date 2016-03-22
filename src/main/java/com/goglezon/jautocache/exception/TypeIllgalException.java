@@ -1,5 +1,8 @@
 package com.goglezon.jautocache.exception;
 
+/**
+ * Created by yuwenqi@jd.com on 2016/3/18.
+ */
 public class TypeIllgalException extends Exception {
 
     public TypeIllgalException(){
