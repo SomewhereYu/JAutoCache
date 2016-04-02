@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by yuwenqi@jd.com on 2015/12/1 16:06.
+ * Created by yuwenqi@goglezon.com on 2015/12/1 16:06.
  */
 
 public class CacheRuleWorker extends Thread {

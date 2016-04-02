@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/19 10:56.
+ * Created by yuwenqi@goglezon.com on 2015/11/19 10:56.
  */
 public class JVMCacheObject<T> implements Serializable{
     Logger logger= LoggerFactory.getLogger(JVMCacheObject.class);

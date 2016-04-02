@@ -1,6 +1,5 @@
 package com.goglezon.jautocache.common;
 
-import com.goglezon.jautocache.advisor.LegalArgTypes;
 import com.goglezon.jautocache.model.AutoCacheModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 /**
- * Created by yuwenqi@jd.com on 2016/2/29 11:03.
+ * Created by yuwenqi@goglezon.com on 2016/2/29 11:03.
  */
 public class ArgumentParser {
     static Logger logger = LoggerFactory.getLogger(ArgumentParser.class);

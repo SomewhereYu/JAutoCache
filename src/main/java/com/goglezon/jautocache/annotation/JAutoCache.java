@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/10.
+ * Created by yuwenqi@goglezon.com on 2015/11/10.
  */
 
 @Target(ElementType.TYPE)

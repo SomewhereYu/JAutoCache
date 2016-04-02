@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/19 10:56.
+ * Created by yuwenqi@goglezon.com on 2015/11/19 10:56.
  */
 
 public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {

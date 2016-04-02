@@ -14,7 +14,7 @@ import java.util.jar.JarFile;
 
 /**
  * 装载类的大货车
- * Created by yuwenqi@jd.com on 2015/11/30 20:35.
+ * Created by yuwenqi@goglezon.com on 2015/11/30 20:35.
  */
 public class ClassVan {
     /**

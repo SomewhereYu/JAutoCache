@@ -3,7 +3,7 @@ package com.goglezon.jautocache.provider;
 import java.io.Serializable;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/19 10:56.
+ * Created by yuwenqi@goglezon.com on 2015/11/19 10:56.
  */
 public class RedisCacheObject implements Serializable{
     private Object data;

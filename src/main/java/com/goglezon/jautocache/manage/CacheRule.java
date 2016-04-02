@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/30 11:00.
+ * Created by yuwenqi@goglezon.com on 2015/11/30 11:00.
  */
 public class CacheRule implements Serializable {
     private Enum cacheType;

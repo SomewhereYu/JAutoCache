@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/30 13:27.
+ * Created by yuwenqi@goglezon.com on 2015/11/30 13:27.
  */
 public class CacheRuleManager {
     private static Logger logger = LoggerFactory.getLogger(CacheRuleManager.class);

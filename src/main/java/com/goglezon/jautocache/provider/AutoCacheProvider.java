@@ -4,7 +4,7 @@ import com.goglezon.jautocache.exception.NullCacheException;
 import com.goglezon.jautocache.exception.OpCacheException;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/14 1:39.
+ * Created by yuwenqi@goglezon.com on 2015/11/14 1:39.
  */
 
 public interface AutoCacheProvider {

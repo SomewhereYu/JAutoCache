@@ -3,7 +3,7 @@ package com.goglezon.jautocache.utils;
 import java.io.*;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/30 13:56.
+ * Created by yuwenqi@goglezon.com on 2015/11/30 13:56.
  */
 public class ByteArrayUtil {
     public static Object fromBytes(byte[] bytes) throws IOException, ClassNotFoundException {

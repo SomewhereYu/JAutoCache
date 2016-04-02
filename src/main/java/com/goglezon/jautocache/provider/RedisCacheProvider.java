@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/19 10:56.
+ * Created by yuwenqi@goglezon.com on 2015/11/19 10:56.
  */
 @Repository
 public class RedisCacheProvider implements AutoCacheProvider {

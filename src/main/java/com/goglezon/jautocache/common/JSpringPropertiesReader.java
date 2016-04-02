@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by yuwenqi@jd.com on 2015/12/4 18:17.
+ * Created by yuwenqi@goglezon.com on 2015/12/4 18:17.
  */
 @Resource
 public class JSpringPropertiesReader extends PropertyPlaceholderConfigurer {

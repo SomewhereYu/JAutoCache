@@ -1,10 +1,10 @@
-package com.goglezon.jautocache.advisor;
+package com.goglezon.jautocache.common;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by yuwenqi@jd.com on 2015/11/20 23:53.
+ * Created by yuwenqi@goglezon.com on 2015/11/20 23:53.
  */
 public class LegalArgTypes {
     private static final Set<Class> basin = new HashSet<Class>();

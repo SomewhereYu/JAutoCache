@@ -8,7 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by yuwenqi@jd.com on 2015/12/4 16:10.
+ * Created by yuwenqi@goglezon.com on 2015/12/4 16:10.
  */
 public class LRULinkedHashMap<K,V> extends LinkedHashMap<K,V> {
     private final int maxCapacity;
