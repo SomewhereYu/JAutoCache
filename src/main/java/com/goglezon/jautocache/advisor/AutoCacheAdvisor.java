@@ -58,11 +58,10 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
             cacheKey = methodInvocation.getMethod().getDeclaringClass().getName() + cacheKey;
         }
 
-        //缓存存活时间
-        int keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
-
         //处理缓存
         if (hasUseAnnotation) {
+            //缓存存活时间
+            int keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
             result=handleUseCacheAnnotation(methodInvocation,cacheKey, keepAlive);
         } else if (hasClearAnnotation) {
             result=handleClearCacheAnnotation(methodInvocation,cacheKey);
