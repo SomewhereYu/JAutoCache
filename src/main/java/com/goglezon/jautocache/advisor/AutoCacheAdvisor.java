@@ -27,16 +27,16 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
         Object result = null;
         //注解相关校验
         logger.debug(methodInvocation.getMethod().getDeclaringClass().getName());
-        JAutoCache jAutoCache = methodInvocation.getMethod().getDeclaringClass().getAnnotation(JAutoCache.class);
+        final JAutoCache jAutoCache = methodInvocation.getMethod().getDeclaringClass().getAnnotation(JAutoCache.class);
         if (jAutoCache == null) {
             return methodInvocation.proceed();
         }
 
-        JUseCache jUseCache = methodInvocation.getMethod().getAnnotation(JUseCache.class);
-        JClearCache jClearCache = methodInvocation.getMethod().getAnnotation(JClearCache.class);
+        final JUseCache jUseCache = methodInvocation.getMethod().getAnnotation(JUseCache.class);
+        final JClearCache jClearCache = methodInvocation.getMethod().getAnnotation(JClearCache.class);
 
-        boolean hasUseAnnotation = jUseCache != null && jUseCache.useCache();
-        boolean hasClearAnnotation = jClearCache != null && jClearCache.clearCache();
+        final boolean hasUseAnnotation = jUseCache != null && jUseCache.useCache();
+        final boolean hasClearAnnotation = jClearCache != null && jClearCache.clearCache();
 
         if (!(hasUseAnnotation || hasClearAnnotation)){
             return methodInvocation.proceed();
@@ -50,7 +50,7 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
             logger.error("The argument type are not permitted. Cache disabled.\n" + e.getMessage());
             return methodInvocation.proceed();
         }
-        String methodName = methodInvocation.getMethod().getName();
+        final String methodName = methodInvocation.getMethod().getName();
         String cacheKey="." + methodName + "(" + unitedArgsKey + ")";
         if (!jAutoCache.keyPrefix().equals("")) {
             cacheKey = jAutoCache.keyPrefix() + cacheKey;
@@ -61,7 +61,7 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
         //处理缓存
         if (hasUseAnnotation) {
             //缓存存活时间
-            int keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
+            final int keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
             result=handleUseCacheAnnotation(methodInvocation,cacheKey, keepAlive);
         } else if (hasClearAnnotation) {
             result=handleClearCacheAnnotation(methodInvocation,cacheKey);

@@ -30,7 +30,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
      * @return
      */
     public Object getRawObject(String key) throws NullCacheException {
-        JVMCacheObject jvmCacheObject = cacheMap.get(key);
+        final JVMCacheObject jvmCacheObject = cacheMap.get(key);
         if (jvmCacheObject == null || jvmCacheObject.expired()
                 || jvmCacheObject.getServiceUnavailableTimes() > this.keepAliveTimesOnException) {
             return null;
@@ -50,7 +50,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
      * @param keepAlive 为存活时间秒数
      */
     public void setRawObject(String key, Object obj, int keepAlive) {
-        JVMCacheObject jvmCacheObject = new JVMCacheObject(key);
+        final JVMCacheObject jvmCacheObject = new JVMCacheObject(key);
         jvmCacheObject.delay(keepAlive);
         jvmCacheObject.setData(obj==null?null:BeanUtils.clone(obj));
         cacheMap.put(key, jvmCacheObject);
@@ -67,7 +67,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
      * @throws Exception
      */
     public Object onException(String key,int keepAlive, Exception e) throws Exception {
-        JVMCacheObject jvmCacheObject = cacheMap.get(key);
+        final JVMCacheObject jvmCacheObject = cacheMap.get(key);
         //缓存里没有该对象时，且真实接口抛异常时，将异常继续抛出
         if (jvmCacheObject == null
                 || jvmCacheObject.getServiceUnavailableTimes() >= this.keepAliveTimesOnException) {
@@ -86,8 +86,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
     }
 
     public void afterPropertiesSet() throws Exception {
-        int maxCap=getMaxCapacity();
-        cacheMap = new LRULinkedHashMap<String, JVMCacheObject>(maxCap);
+        cacheMap = new LRULinkedHashMap<String, JVMCacheObject>(getMaxCapacity());
     }
 
     public int getMaxCapacity() {
