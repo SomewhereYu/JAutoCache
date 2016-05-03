@@ -11,7 +11,7 @@ import java.util.*;
  * Created by yuwenqi@goglezon.com on 2016/2/29 11:03.
  */
 public class ArgumentParser {
-    static Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
+    final static Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
     private Object[] args;
     public ArgumentParser(Object[] args){
         this.args=args;

@@ -18,7 +18,7 @@ import java.util.Map;
  */
 
 public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
-    private static Logger logger = LoggerFactory.getLogger(JVMCacheProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(JVMCacheProvider.class);
     private static Map<String, JVMCacheObject> cacheMap;
     private int maxCapacity = 100000;
     private int keepAliveTimesOnException = 10;

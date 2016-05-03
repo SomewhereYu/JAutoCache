@@ -19,7 +19,7 @@ import org.springframework.beans.factory.InitializingBean;
  */
 
 public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
-    static Logger logger = LoggerFactory.getLogger(AutoCacheAdvisor.class);
+    final static Logger logger = LoggerFactory.getLogger(AutoCacheAdvisor.class);
 
     private AutoCacheProvider autoCacheProvider;
 

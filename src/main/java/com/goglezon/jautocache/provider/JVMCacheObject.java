@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by yuwenqi@goglezon.com on 2015/11/19 10:56.
  */
 public class JVMCacheObject<T> implements Serializable{
-    Logger logger= LoggerFactory.getLogger(JVMCacheObject.class);
+    private static final Logger logger= LoggerFactory.getLogger(JVMCacheObject.class);
 
     private String key;
     //过期时间，非存活时间
@@ -21,7 +21,7 @@ public class JVMCacheObject<T> implements Serializable{
         this.key=key;
     }
 
-    public Object getData(){
+    public T getData(){
         return data;
     }
 
