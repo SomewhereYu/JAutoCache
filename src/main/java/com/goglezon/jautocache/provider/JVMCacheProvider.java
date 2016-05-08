@@ -82,6 +82,7 @@ public class JVMCacheProvider implements AutoCacheProvider, InitializingBean {
      * @param s
      */
     public void clearRawObject(String s) {
+        System.out.println("clearRawObject:" +s);
         cacheMap.remove(s);
     }
 

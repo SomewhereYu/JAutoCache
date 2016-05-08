@@ -51,20 +51,24 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
             return methodInvocation.proceed();
         }
         String methodName = methodInvocation.getMethod().getName();
-        String cacheKey="." + methodName + "(" + unitedArgsKey + ")";
+        String cacheKeyPrefix;
+
+
         if (!jAutoCache.keyPrefix().equals("")) {
-            cacheKey = jAutoCache.keyPrefix() + cacheKey;
+            cacheKeyPrefix = jAutoCache.keyPrefix();
         } else {
-            cacheKey = methodInvocation.getMethod().getDeclaringClass().getName() + cacheKey;
+            cacheKeyPrefix = methodInvocation.getMethod().getDeclaringClass().getName();
         }
 
         //处理缓存
         if (hasUseAnnotation) {
             //缓存存活时间
+            String cacheKey="." + methodName + "(" + unitedArgsKey + ")";
             int keepAlive = jUseCache.keepAlive() > 0 ? jUseCache.keepAlive() : jAutoCache.keepAlive();
-            result=handleUseCacheAnnotation(methodInvocation,cacheKey, keepAlive);
+            result=handleUseCacheAnnotation(methodInvocation,cacheKeyPrefix+cacheKey, keepAlive);
         } else if (hasClearAnnotation) {
-            result=handleClearCacheAnnotation(methodInvocation,cacheKey);
+            String cacheKey="." + jClearCache.what() + "(" + unitedArgsKey + ")";
+            result=handleClearCacheAnnotation(methodInvocation,cacheKeyPrefix+cacheKey);
         }
         return result;
     }
@@ -107,7 +111,9 @@ public class AutoCacheAdvisor implements MethodInterceptor, InitializingBean {
      * @return
      * @throws Throwable
      */
+
     private Object handleClearCacheAnnotation(MethodInvocation methodInvocation,String cacheKey) throws Throwable {
+        System.out.println("CLEAR:" +cacheKey);
         Object result = null;
         try {
             result = methodInvocation.proceed();
