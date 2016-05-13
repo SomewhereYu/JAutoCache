@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 
 public @interface JClearCache {
     boolean clearCache() default true;
-    String what() default "";
+    String what();
 }
